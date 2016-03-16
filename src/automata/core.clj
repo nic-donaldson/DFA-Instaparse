@@ -3,7 +3,7 @@
             [instaparse.core :as insta])
   (:gen-class))
 
-(def example-dfa
+(comment (def example-dfa
   {:transition 
    {"q1"
     {\a "q1"
@@ -18,7 +18,7 @@
      \b "q3"
      \c "q3"}}
    :final "q3"
-   :start "q1"})
+   :start "q1"}))
 
 (defn t-function
   [dfa state sym]
@@ -47,11 +47,12 @@
      op_white = #'\\s*'
      force_white = #'\\s+'"))
 
-(def dfa-example-string
-  (-> "dfa.txt" io/resource io/file slurp))
+(comment
+  (def dfa-example-string
+    (-> "dfa.txt" io/resource io/file slurp))
 
-(def dfa-example-parse
-  (dfa-parser dfa-example-string))
+  (def dfa-example-parse
+    (dfa-parser dfa-example-string)))
 
 (defn transform-tlabel
   ([x] (list (first x)))
@@ -81,6 +82,9 @@
 
 (defn -main
   [dfa-fname start-state word & args]
-  (xt-function (tree-to-transition-table (-> dfa-fname io/resource io/file slurp))
-               start-state
-               word))
+  (println 
+    "End state:" 
+    (xt-function 
+      (tree-to-transition-table (-> dfa-fname io/resource io/file slurp dfa-parser))
+      start-state
+      word)))
