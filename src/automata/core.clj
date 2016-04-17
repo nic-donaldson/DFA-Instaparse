@@ -3,7 +3,7 @@
             [instaparse.core :as insta])
   (:gen-class))
 
-(comment (def example-dfa
+(def example-dfa
   {:transition 
    {"q1"
     {\a "q1"
@@ -18,7 +18,7 @@
      \b "q3"
      \c "q3"}}
    :final "q3"
-   :start "q1"}))
+   :start "q1"})
 
 (defn t-function
   [dfa state sym]
@@ -27,15 +27,7 @@
 
 (defn xt-function
   [dfa state word]
-  (let [t-table (:transition dfa)]
-    (loop
-      [state state
-       sym (first word)
-       word (rest word)]
-      (let [next-state (t-function dfa state sym)]
-        (if (empty? word)
-          next-state
-          (recur next-state (first word) (rest word)))))))
+  (reduce #(t-function dfa %1 %2) state word))
 
 (def dfa-parser
   (insta/parser
